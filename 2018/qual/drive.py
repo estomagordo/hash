@@ -27,30 +27,33 @@ def solve(r, c, f, n, b, t, rides):
         newscore = score
         newassignments = deepcopy(assignments)
 
-        for newridenum in range(n):
-            ride = rides[newridenum]
-            taken = False
+        for _ in range(1):
+            for newridenum in range(n):
+                ride = rides[newridenum]
+                taken = False
 
-            for line in assignments:
-                if ride[-1] in line:
-                    taken = True
-                    break
+                for line in newassignments:
+                    if ride[-1] in line:
+                        taken = True
+                        break
 
-            if taken:
-                continue
+                if taken:
+                    continue
 
-            reaching = time + distance(y, x, ride[0], ride[1])
-            length = distance(ride[0], ride[1], ride[2], ride[3])
-            done = max(reaching, ride[4]) + length
-            
-            if done <= ride[5]:
-                time = done
-                newscore -= length - (0 if reaching > ride[4] else b)                
-                newassignments[carnum].append(ride[-1])
+                reaching = time + distance(y, x, ride[0], ride[1])
+                length = distance(ride[0], ride[1], ride[2], ride[3])
+                done = max(reaching, ride[4]) + length
                 
-                if newscore < best:
-                    best = newscore
-                    write(newscore, newassignments)
+                if done <= ride[5]:
+                    time = done
+                    newscore -= length + (0 if reaching > ride[4] else b)                
+                    newassignments[carnum].append(ride[-1])
+                    y = ride[2]
+                    x = ride[3]
+                    
+                    if newscore < best:
+                        best = newscore
+                        write(newscore, newassignments)
 
         if carnum == f - 1:
             continue
