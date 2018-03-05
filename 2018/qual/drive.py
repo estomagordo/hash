@@ -44,6 +44,7 @@ def solve(r, c, f, n, b, t, rides):
             done = max(reaching, ride[4]) + length
             
             if done <= ride[5]:
+                time = done
                 newscore -= length - (0 if reaching > ride[4] else b)                
                 newassignments[carnum].append(ride[-1])
                 
@@ -57,7 +58,7 @@ def solve(r, c, f, n, b, t, rides):
         heappush(runs, [newscore, 0, 0, 0, carnum + 1, newassignments])
 
 if __name__ == '__main__':
-    filename = 'a_example'#argv[1]
+    filename = argv[1]
 
     with open(filename + '.in') as file_in:
         r, c, f, n, b, t = list(map(int, file_in.readline().split()))
