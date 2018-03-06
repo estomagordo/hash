@@ -19,25 +19,16 @@ def solve(r, c, f, n, b, t, rides):
 
     rides.sort(key = lambda ride: ride[4])    
 
-    runs = [[0, 0, 0, 0, 0, [[] for _ in range(f)]]]
+    runs = [[0, 0, 0, 0, 0, 0, set(), [[] for _ in range(f)]]]
     
     while runs:
-        score, y, x, time, carnum, assignments = heappop(runs)
-
-        newscore = score
-        newassignments = deepcopy(assignments)
-
-        for _ in range(1):
-            for newridenum in range(n):
+        score, y, x, time, carnum, ridenum, taken, assignments = heappop(runs)
+        
+        for newcarnum in range(carnum, f):
+            for newridenum in range(ridenum, n):
                 ride = rides[newridenum]
-                taken = False
 
-                for line in newassignments:
-                    if ride[-1] in line:
-                        taken = True
-                        break
-
-                if taken:
+                if ride[-1] in taken:
                     continue
 
                 reaching = time + distance(y, x, ride[0], ride[1])
@@ -45,20 +36,23 @@ def solve(r, c, f, n, b, t, rides):
                 done = max(reaching, ride[4]) + length
                 
                 if done <= ride[5]:
-                    time = done
-                    newscore -= length + (0 if reaching > ride[4] else b)                
-                    newassignments[carnum].append(ride[-1])
+                    
+                    score -= length + (0 if reaching > ride[4] else b)                
+                    assignments[carnum].append(ride[-1])
                     y = ride[2]
                     x = ride[3]
+                    time = done
+                    taken.add(ride[-1])
                     
-                    if newscore < best:
-                        best = newscore
-                        write(newscore, newassignments)
+                    if score < best:
+                        best = score
+                        write(score, assignments)
 
-        if carnum == f - 1:
-            continue
-
-        heappush(runs, [newscore, 0, 0, 0, carnum + 1, newassignments])
+                newassignments = deepcopy(assignments)
+                newtaken = deepcopy(taken)
+                heappush(runs, [score, y, x, time, carnum, newridenum + 1, newtaken, newassignments])
+            
+            ridenum = 0
 
 if __name__ == '__main__':
     filename = argv[1]
