@@ -1,3 +1,8 @@
+"""
+This is the (rather poor) code I played with last year. I thought I'd submit it as a baseline.
+I plan to work on an entirely new approach this year, rather than build much further on this, given how flawed it was.
+"""
+
 from sys import argv
 from heapq import heappush, heappop
 
